@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/edusmart-api/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/edusmart-api/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/edusmart-api",
+  "projects": {
+    "edusmart": {
+      "type": "application",
+      "root": "apps/edusmart-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/edusmart-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/edusmart-api/tsconfig.app.json"
+      }
+    },
+    "edusmart-batch": {
+      "type": "application",
+      "root": "apps/edusmart-batch",
+      "entryFile": "main",
+      "sourceRoot": "apps/edusmart-batch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/edusmart-batch/tsconfig.app.json"
+      }
+    }
+  }
+}

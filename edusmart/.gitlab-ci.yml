@@ -1,0 +1,32 @@
+image: node:22.11.0
+
+stages:
+  - install
+  - build
+  - deploy
+
+# Install dependencies
+install:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+# Build the NestJS app
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+# Deploy (adjust this to your needs)
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the app..."
+  only:
+    - master
