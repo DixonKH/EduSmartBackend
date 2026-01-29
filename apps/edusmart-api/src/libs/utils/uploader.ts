@@ -2,10 +2,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { Options } from 'multer';
 import * as path from 'path';
-import { configureCloudinary } from '../config';
 
 // Cloudinary instance (agar global config qilingan bo'lsa)
-configureCloudinary();
 
 export function getMulterUploader(address: string): Options {
   return {

@@ -39,14 +39,14 @@ export class MemberController {
 		@UploadedFile() file: Express.Multer.File,
 	): Promise<Member> {
 		console.log('POST: updateMember');
-		
+
 		delete input._id;
 		if (!memberId) {
 			throw new Error('Member ID is required!');
 		}
-		const uploadPath = `./uploads/member`; // Path ni dinamik tarzda kiritish
+
 		if (file) {
-			input.memberImage = `${uploadPath}/${file.filename}`;
+			input.memberImage = (file as any).secure_url || (file as any).path;
 		}
 		//   console.log(`req:${input}`)
 		return await this.memberService.updateMember(memberId, input);
@@ -57,7 +57,7 @@ export class MemberController {
 	public async checkAuth(@AuthMember('_id') authMember: Member): Promise<Member> {
 		console.log('GET: checkAuth');
 		console.log('memberNick', authMember);
-        
+
 		return await this.memberService.getCurrentMember(authMember._id);
 	}
 	@Roles(MemberType.STUDENT, MemberType.TEACHER)
@@ -70,7 +70,7 @@ export class MemberController {
 	@UseGuards(WithoutGuard)
 	@Get('getMember')
 	public async getMember(@Query() input: string, @AuthMember('_id') memberId: ObjectId): Promise<Member> {
-		console.log('GET: getMember'); 
+		console.log('GET: getMember');
 		const targetId = shapeIntoMongoObjectId(input);
 		return await this.memberService.getMember(memberId, targetId);
 	}

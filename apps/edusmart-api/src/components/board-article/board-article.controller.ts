@@ -53,11 +53,10 @@ export class BoardArticleController {
 		let articleImage = null;
 
 		if (file) {
-			const cloudinaryFile = file as any;
-			articleImage = cloudinaryFile.secure_url || cloudinaryFile.path || cloudinaryFile.url;
+			articleImage = file.path; // 🔥 DOIM SHU
 		}
 
-		console.log(file);
+		console.log('Cloudinary File: ', file);
 
 		const parsedInput = {
 			articleTitle,
@@ -89,8 +88,7 @@ export class BoardArticleController {
 		input._id = shapeIntoMongoObjectId(input._id);
 
 		if (file) {
-			const cloudinaryFile = file as any;
-			input.articleImage = cloudinaryFile.secure_url || cloudinaryFile.path || cloudinaryFile.url;
+			input.articleImage = file.path; // 🔥 DOIM SHU
 		}
 
 		console.log('FILE:', file);
