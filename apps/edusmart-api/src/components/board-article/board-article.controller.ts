@@ -50,10 +50,9 @@ export class BoardArticleController {
 			throw new BadRequestException('Missing required fields');
 		}
 
-		let articleImage = null;
-
 		if (file) {
-			articleImage = file.path; // 🔥 DOIM SHU
+			const cloudinaryFile = file as any;
+			body.articleImage = cloudinaryFile.secure_url || cloudinaryFile.path;
 		}
 
 		console.log('Cloudinary File: ', file);
@@ -62,7 +61,7 @@ export class BoardArticleController {
 			articleTitle,
 			articleContent,
 			articleCategory,
-			articleImage,
+			articleImage: body.articleImage,
 		};
 
 		console.log('Parsed input:', parsedInput);
@@ -88,7 +87,9 @@ export class BoardArticleController {
 		input._id = shapeIntoMongoObjectId(input._id);
 
 		if (file) {
-			input.articleImage = file.path; // 🔥 DOIM SHU
+			const cloudinaryFile = file as any;
+			// Multer + Cloudinary dan kelgan fayl objectida secure_url bo'ladi
+			input.articleImage = cloudinaryFile.secure_url || cloudinaryFile.path;
 		}
 
 		console.log('FILE:', file);

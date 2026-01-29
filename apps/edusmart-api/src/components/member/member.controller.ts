@@ -46,7 +46,8 @@ export class MemberController {
 		}
 
 		if (file) {
-			input.memberImage = (file as any).secure_url || (file as any).path;
+			const cloudinaryFile = file as any;
+			input.memberImage = cloudinaryFile.secure_url || cloudinaryFile.path;
 		}
 		//   console.log(`req:${input}`)
 		return await this.memberService.updateMember(memberId, input);
