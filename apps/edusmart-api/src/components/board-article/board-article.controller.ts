@@ -49,17 +49,21 @@ export class BoardArticleController {
 		if (!articleTitle || !articleContent || !articleCategory) {
 			throw new BadRequestException('Missing required fields');
 		}
+
 		let articleImage = null;
+
 		if (file) {
-			articleImage = file.path; // https://res.cloudinary.com/.../article/filename.jpg
-			console.log('Cloudinary URL:', articleImage);
+			const cloudinaryFile = file as any;
+			articleImage = cloudinaryFile.secure_url || cloudinaryFile.path || cloudinaryFile.url;
 		}
+
+		console.log(file);
 
 		const parsedInput = {
 			articleTitle,
 			articleContent,
 			articleCategory,
-			articleImage: file ? file.path : null,
+			articleImage,
 		};
 
 		console.log('Parsed input:', parsedInput);
@@ -82,12 +86,11 @@ export class BoardArticleController {
 		@AuthMember('_id') memberId: ObjectId,
 		@UploadedFile() file: Express.Multer.File,
 	): Promise<BoardArticle> {
-		console.log('memberId', memberId);
-		console.log('POST: updateBoardArticle');
 		input._id = shapeIntoMongoObjectId(input._id);
 
 		if (file) {
-			input.articleImage = file.path; // 🔥 CLOUDINARY URL
+			const cloudinaryFile = file as any;
+			input.articleImage = cloudinaryFile.secure_url || cloudinaryFile.path || cloudinaryFile.url;
 		}
 
 		console.log('FILE:', file);
