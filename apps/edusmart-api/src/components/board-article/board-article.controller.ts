@@ -59,7 +59,7 @@ export class BoardArticleController {
 			articleTitle,
 			articleContent,
 			articleCategory,
-			articleImage,
+			articleImage: file ? file.path : null,
 		};
 
 		console.log('Parsed input:', parsedInput);
@@ -85,10 +85,9 @@ export class BoardArticleController {
 		console.log('memberId', memberId);
 		console.log('POST: updateBoardArticle');
 		input._id = shapeIntoMongoObjectId(input._id);
-		let articleImage = input.articleImage;
 
 		if (file) {
-			articleImage = file.path; // 🔥 CLOUDINARY URL
+			input.articleImage = file.path; // 🔥 CLOUDINARY URL
 		}
 
 		console.log('FILE:', file);
