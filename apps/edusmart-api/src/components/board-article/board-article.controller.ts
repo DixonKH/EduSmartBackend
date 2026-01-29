@@ -12,7 +12,7 @@ import {
 import { BoardArticleService } from './board-article.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import {
-	AllBoardArticlesInquiry, 
+	AllBoardArticlesInquiry,
 	BoardArticleInput,
 	BoardArticlesInquiry,
 } from '../../libs/dto/board-article/board-article.input';
@@ -35,7 +35,7 @@ export class BoardArticleController {
 	constructor(private readonly boardArticleService: BoardArticleService) {}
 
 	@UseGuards(AuthGuard)
-	@Post('createBoardArticle') 
+	@Post('createBoardArticle')
 	@UseInterceptors(FileInterceptor('articleImage', getMulterUploader('article')))
 	public async createBoardArticle(
 		@AuthMember('_id') memberId: ObjectId,
@@ -47,21 +47,22 @@ export class BoardArticleController {
 		}
 		const { articleTitle, articleContent, articleCategory } = body;
 		if (!articleTitle || !articleContent || !articleCategory) {
-		  throw new BadRequestException('Missing required fields');
+			throw new BadRequestException('Missing required fields');
 		}
-		const uploadPath = `./uploads/article`; // Path ni dinamik tarzda kiritish
+		let articleImage = null;
 		if (file) {
-			body.articleImage = `${uploadPath}/${file.filename}`;
+			articleImage = file.path; // https://res.cloudinary.com/.../article/filename.jpg
+			console.log('Cloudinary URL:', articleImage);
 		}
 
 		const parsedInput = {
 			articleTitle,
 			articleContent,
 			articleCategory,
-			articleImage: body.articleImage, 
-		  };
+			articleImage,
+		};
 
-        console.log('Parsed input:', parsedInput);	
+		console.log('Parsed input:', parsedInput);
 		return await this.boardArticleService.createBoardArticle(memberId, parsedInput);
 	}
 
@@ -115,7 +116,7 @@ export class BoardArticleController {
 	/** ADMIN **/
 
 	@Roles(MemberType.ADMIN)
-	@UseGuards(RolesGuard) 
+	@UseGuards(RolesGuard)
 	@Get('getAllBoardArticlesAdmin')
 	public async getAllBoardArticlesByAdmin(
 		@Query() input: AllBoardArticlesInquiry,
