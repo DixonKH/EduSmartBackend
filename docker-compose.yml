@@ -1,0 +1,49 @@
+# version: '3.8'
+services:
+  edusmart-api:
+    container_name: edusmart-api
+    restart: always
+    image: node:22.11.0
+    environment:
+      - PORT_API=4007
+    ports:
+      - 3007:4007
+    volumes:
+      - ./:/usr/src/edusmart
+    working_dir: /usr/src/edusmart
+
+    networks:
+      - monorepo-network
+    # for production
+    command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
+
+  edusmart-batch:
+    container_name: edusmart-batch
+    restart: unless-stopped
+    image: node:22.11.0
+    environment:
+      - PORT_BATCH=4008
+    ports:
+      - 3008:4008
+    volumes:
+      - ./:/usr/src/edusmart
+    working_dir: /usr/src/edusmart
+
+    networks:
+      - monorepo-network
+    # for production
+    command: bash -c "npm install && npm run build && npm run start:prod:batch"
+
+networks:
+  monorepo-network:
+    driver: bridge
+
+# edusmart-react: localhost: 5173 => container: 4006
+# edusmart-api: localhost: 3007 => container: 4007
+# edusmart-batch: localhost: 3008 => container: 4008
+
+# docker compose up -d
+# docker-compose start
+# docker-compose stop
+# docker-compose restart
+# docker-compose stop && docker compose rm -f
