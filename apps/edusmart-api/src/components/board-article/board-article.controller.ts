@@ -85,10 +85,15 @@ export class BoardArticleController {
 		console.log('memberId', memberId);
 		console.log('POST: updateBoardArticle');
 		input._id = shapeIntoMongoObjectId(input._id);
-		const uploadPath = `./uploads/article`; // Path ni dinamik tarzda kiritish
+		let articleImage = input.articleImage;
+
 		if (file) {
-			input.articleImage = `${uploadPath}/${file.filename}`;
+			articleImage = file.path; // 🔥 CLOUDINARY URL
 		}
+
+		console.log('FILE:', file);
+		console.log('FILE PATH:', file?.path);
+
 		return await this.boardArticleService.updateBoardArticle(memberId, input);
 	}
 
